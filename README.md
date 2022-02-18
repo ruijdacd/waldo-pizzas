@@ -22,9 +22,11 @@ And finally open [http://localhost:3000](http://localhost:3000) with your browse
 
 ## Preview
 
-This project was also deployed on Vercel to make the process easier for everyone.
+~~This project was also deployed on Vercel to make the process easier for everyone.~~
 
-You can access the project [here]().
+~~You can access the project [here](https://waldo-pizzas.vercel.app).~~
+
+Due to access control restrictions on the GraphQL endpoint, unfortunately the Vercel deploy is not working.
 
 ## Notes
 
