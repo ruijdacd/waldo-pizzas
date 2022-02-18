@@ -1,21 +1,43 @@
-# Hello World example
+# Waldo Pizza
 
-This example shows the most basic idea behind Next. We have 2 pages: `pages/index.js` and `pages/about.js`. The former responds to `/` requests and the latter to `/about`. Using `next/link` you can add hyperlinks between them with universal routing capabilities. The `day` directory shows that you can have subdirectories.
+## Project Setup
 
-## Deploy your own
-
-Deploy the example using [Vercel](https://vercel.com):
-
-[![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/import/project?template=https://github.com/vercel/next.js/tree/canary/examples/hello-world)
-
-## How to use
-
-Execute [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app) with [npm](https://docs.npmjs.com/cli/init) or [Yarn](https://yarnpkg.com/lang/en/docs/cli/create/) to bootstrap the example:
+First, install the project's dependencies:
 
 ```bash
-npx create-next-app --example hello-world hello-world-app
+npm install
 # or
-yarn create next-app --example hello-world hello-world-app
+yarn
 ```
 
-Deploy it to the cloud with [Vercel](https://vercel.com/import?filter=next.js&utm_source=github&utm_medium=readme&utm_campaign=next-example) ([Documentation](https://nextjs.org/docs/deployment)).
+Secondly, run the project in development mode:
+
+```bash
+npm run dev
+# or
+yarn dev
+```
+
+And finally open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+
+## Preview
+
+This project was also deployed on Vercel to make the process easier for everyone.
+
+You can access the project [here]().
+
+## Notes
+
+### UX
+
+The toppings are reset to their default selected state when the pizza size is changed, since each pizza size can have a different maximum amount of toppings.
+
+An alternative to this would be to keep the topings selected when changing sizes, however that would require validation errors to show up and force the user to "correct" their choices, which might create confusion if it's not clear.
+
+### Styling
+
+The project as of time of writing is basically completely unstyled, although in the coming days I will clean up the design slightly to make a clearer UX and to make it easy to understand how to interact with the app. (I am aware that it won't be taken into consideration for the evaluation).
+
+### State Management
+
+I decided to fully leverage Apollo Client and its [Reactive Variables](https://www.apollographql.com/docs/react/local-state/reactive-variables/) for managing the state of the app.

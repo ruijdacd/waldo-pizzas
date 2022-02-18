@@ -23,6 +23,7 @@ export function Toppings() {
   useEffect(() => {
     if (!pizzaToppings || !pizzaToppings.toppings) return;
 
+    // Initialise default selected toppings based on the selected pizza size
     initialiseToppings(pizzaToppings.toppings);
   }, [pizzaToppings]);
 
