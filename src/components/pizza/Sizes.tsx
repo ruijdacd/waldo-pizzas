@@ -1,8 +1,12 @@
 import { useReactiveVar } from "@apollo/client";
 
-import { itemVar, setItemSize } from "@/state/item";
+import { itemVar } from "@/state/item";
 
 import { usePizzaSizes } from "@/queries/usePizzaSizes";
+
+import { Size } from "./Size";
+
+import styles from "./Sizes.module.scss";
 
 export function Sizes() {
   const { size } = useReactiveVar(itemVar);
@@ -16,22 +20,13 @@ export function Sizes() {
   if (loading) return <div>Loading sizes...</div>;
 
   return (
-    <div>
+    <div className={styles.root}>
       {pizzaSizes.map((size) => (
-        <div key={size.name}>
-          <label>
-            <input
-              type="radio"
-              name="size"
-              value={size.name}
-              checked={isSizeSelected(size.name)}
-              onChange={() => setItemSize(size)}
-              required
-            />
-            <span>{size.name}</span>
-          </label>
-          <div>Starting at {size.basePrice}€</div>
-        </div>
+        <Size
+          key={size.name}
+          isSelected={isSizeSelected(size.name)}
+          size={size}
+        />
       ))}
     </div>
   );

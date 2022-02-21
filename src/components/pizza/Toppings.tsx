@@ -3,11 +3,13 @@ import { useReactiveVar } from "@apollo/client";
 
 import { PizzaSizes } from "@/types/globalTypes";
 
-import { initialiseToppings, itemVar } from "@/state/item";
+import { itemVar, useItemActions } from "@/state/item";
 
 import { usePizzaToppings } from "@/queries/usePizzaToppings";
 
 import { Topping } from "./Topping";
+
+import styles from "./Toppings.module.scss";
 
 export function Toppings() {
   const { size, toppings } = useReactiveVar(itemVar);
@@ -15,6 +17,8 @@ export function Toppings() {
   const { pizzaToppings, loading } = usePizzaToppings(
     size?.name.toUpperCase() as PizzaSizes
   );
+
+  const { initialiseToppings } = useItemActions();
 
   function isToppingSelected(name: string) {
     return !!toppings.find((t) => t.name === name);
@@ -32,12 +36,12 @@ export function Toppings() {
   if (!pizzaToppings) return null;
 
   return (
-    <div>
+    <div className={styles.root}>
       <div>
         Toppings limit:{" "}
         <strong>{pizzaToppings.maxToppings || "Unlimited"}</strong>
       </div>
-      <div>
+      <div className={styles.list}>
         {pizzaToppings.toppings.map(({ topping }) => (
           <Topping
             key={topping.name}

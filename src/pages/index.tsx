@@ -1,15 +1,18 @@
-import { Nav } from "@/components/Nav";
+import { Container } from "@/components/Container";
+import { Header } from "@/components/Header";
 
 import { Configurator } from "@/components/pizza/Configurator";
 
 export default function IndexPage() {
   return (
     <div>
-      <Nav />
+      <Header />
 
-      <h1>Home</h1>
+      <Container>
+        <h1>World's Best Pizza</h1>
 
-      <Configurator />
+        <Configurator />
+      </Container>
     </div>
   );
 }
