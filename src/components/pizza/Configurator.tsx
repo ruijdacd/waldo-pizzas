@@ -1,26 +1,29 @@
 import { useCallback } from "react";
 
-import { addItemToCart } from "@/state/cart";
+import { useCartActions } from "@/state/cart";
 
+import { AddToCart } from "./AddToCart";
 import { Sizes } from "./Sizes";
 import { Toppings } from "./Toppings";
 
+import styles from "./Configurator.module.scss";
+
 export function Configurator() {
+  const { addToCart } = useCartActions();
+
   const onSubmit = useCallback((e) => {
     e.preventDefault();
 
-    addItemToCart();
+    addToCart();
   }, []);
 
   return (
-    <form onSubmit={onSubmit}>
-      <div style={{ display: "grid", gap: "1rem" }}>
-        <Sizes />
+    <form className={styles.root} onSubmit={onSubmit}>
+      <Sizes />
 
-        <Toppings />
+      <Toppings />
 
-        <button type="submit">Add to cart</button>
-      </div>
+      <AddToCart />
     </form>
   );
 }

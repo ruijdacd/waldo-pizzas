@@ -3,7 +3,8 @@ import { makeVar } from "@apollo/client";
 import { GetPizzaSizeByName_pizzaSizeByName_toppings_topping } from "@/queries/types/GetPizzaSizeByName";
 import { GetPizzaSizes_pizzaSizes } from "@/queries/types/GetPizzaSizes";
 
-import { itemVar } from "./item";
+import { itemVar, useItemPrice } from "./item";
+import { useCallback } from "react";
 
 export type ItemVar = {
   size: GetPizzaSizes_pizzaSizes;
@@ -17,23 +18,26 @@ export type CartVar = (ItemVar & {
 
 export const cartVar = makeVar<CartVar>([]);
 
-export function addItemToCart() {
-  const { toppings, size } = itemVar();
+export function useCartActions() {
+  const price = useItemPrice();
 
-  const toppingsPrice = toppings.reduce((acc, prev) => (acc += prev.price), 0);
+  const addToCart = useCallback(() => {
+    cartVar([
+      ...cartVar(),
+      {
+        ...itemVar(),
+        id: Date.now(),
+        price,
+      },
+    ]);
+  }, [price]);
 
-  const price = size.basePrice + toppingsPrice;
+  const removeFromCart = useCallback((id: number) => {
+    cartVar([...cartVar().filter((item) => item.id !== id)]);
+  }, []);
 
-  cartVar([
-    ...cartVar(),
-    {
-      ...itemVar(),
-      id: Date.now(),
-      price,
-    },
-  ]);
-}
-
-export function removeItemFromCart(id: number) {
-  cartVar([...cartVar().filter((item) => item.id !== id)]);
+  return {
+    addToCart,
+    removeFromCart,
+  };
 }
