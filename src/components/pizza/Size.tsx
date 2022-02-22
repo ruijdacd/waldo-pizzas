@@ -1,8 +1,9 @@
 import clsx from "clsx";
-
-import { useItemActions } from "@/state/item";
+import { useFormContext } from "react-hook-form";
 
 import { GetPizzaSizes_pizzaSizes } from "@/queries/types/GetPizzaSizes";
+
+import { ConfiguratorState } from "@/types/configurator";
 
 import styles from "./Size.module.scss";
 
@@ -13,7 +14,7 @@ interface SizeProps {
 }
 
 export function Size({ isSelected, size }: SizeProps) {
-  const { setItemSize } = useItemActions();
+  const { setValue } = useFormContext<ConfiguratorState>();
 
   return (
     <label
@@ -25,9 +26,14 @@ export function Size({ isSelected, size }: SizeProps) {
         type="radio"
         name="size"
         value={size.name}
-        checked={isSelected}
-        onChange={() => setItemSize(size)}
         required
+        checked={isSelected}
+        onChange={(e) => {
+          setValue("size", {
+            name: e.target.value,
+            price: size.basePrice,
+          });
+        }}
       />
       <div>
         <div className={styles.name}>{size.name}</div>

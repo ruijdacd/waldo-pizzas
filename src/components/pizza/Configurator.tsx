@@ -1,29 +1,47 @@
 import { useCallback } from "react";
+import { FormProvider, useForm } from "react-hook-form";
+
+import { ConfiguratorState } from "@/types/configurator";
+
+import { calculateItemTotalPrice } from "@/utils/price";
 
 import { useCartActions } from "@/state/cart";
 
 import { AddToCart } from "./AddToCart";
 import { Sizes } from "./Sizes";
-import { Toppings } from "./Toppings";
+import { ToppingsContainer } from "./ToppingsContainer";
 
 import styles from "./Configurator.module.scss";
 
 export function Configurator() {
+  const methods = useForm<ConfiguratorState>({
+    defaultValues: {
+      size: null,
+      toppings: [],
+    },
+  });
+
   const { addToCart } = useCartActions();
 
-  const onSubmit = useCallback((e) => {
-    e.preventDefault();
+  const onSubmit = useCallback(({ size, toppings }: ConfiguratorState) => {
+    const price = calculateItemTotalPrice(size, toppings);
 
-    addToCart();
+    addToCart(
+      size.name,
+      toppings.map((topping) => topping.name),
+      price
+    );
   }, []);
 
   return (
-    <form className={styles.root} onSubmit={onSubmit}>
-      <Sizes />
+    <FormProvider {...methods}>
+      <form className={styles.root} onSubmit={methods.handleSubmit(onSubmit)}>
+        <Sizes />
 
-      <Toppings />
+        <ToppingsContainer />
 
-      <AddToCart />
-    </form>
+        <AddToCart />
+      </form>
+    </FormProvider>
   );
 }
