@@ -1,7 +1,5 @@
 import clsx from "clsx";
 
-import { useItemActions } from "@/state/item";
-
 import { formatPrice } from "@/utils/price";
 
 import { GetPizzaSizeByName_pizzaSizeByName_toppings_topping } from "@/queries/types/GetPizzaSizeByName";
@@ -13,11 +11,18 @@ interface ToppingProps {
 
   reachedMaximum: boolean;
   isSelected: boolean;
+
+  onRemove: () => void;
+  onSelect: () => void;
 }
 
-export function Topping({ topping, reachedMaximum, isSelected }: ToppingProps) {
-  const { setItemTopping } = useItemActions();
-
+export function Topping({
+  topping,
+  reachedMaximum,
+  isSelected,
+  onRemove,
+  onSelect,
+}: ToppingProps) {
   const isDisabled = !isSelected && reachedMaximum;
 
   return (
@@ -29,11 +34,17 @@ export function Topping({ topping, reachedMaximum, isSelected }: ToppingProps) {
     >
       <input
         type="checkbox"
-        name={`toppings-${topping.name}`}
+        name="toppings"
         value={topping.name}
+        disabled={isDisabled}
         checked={isSelected}
-        disabled={!isSelected && reachedMaximum}
-        onChange={() => setItemTopping(topping, isSelected)}
+        onChange={(e) => {
+          if (e.target.checked) {
+            onSelect();
+          } else {
+            onRemove();
+          }
+        }}
       />
       <div>
         <div className={styles.name}>{topping.name}</div>

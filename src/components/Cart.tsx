@@ -2,6 +2,7 @@ import { useMemo } from "react";
 import { useReactiveVar } from "@apollo/client";
 
 import { cartVar, useCartActions } from "@/state/cart";
+
 import { formatPrice } from "@/utils/price";
 
 export function Cart() {
@@ -24,11 +25,8 @@ export function Cart() {
           <div style={{ display: "grid", gap: 16 }}>
             {cart.map((item) => (
               <div key={item.id}>
-                <div>Size: {item.size.name}</div>
-                <div>
-                  Toppings:{" "}
-                  {item.toppings.map((topping) => topping.name).join(", ")}
-                </div>
+                <div>Size: {item.size}</div>
+                <div>Toppings: {item.toppings.join(", ")}</div>
                 <div>Price: {formatPrice(item.price)}</div>
                 <button type="button" onClick={() => removeFromCart(item.id)}>
                   Remove

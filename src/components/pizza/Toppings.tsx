@@ -1,9 +1,8 @@
 import { useEffect } from "react";
-import { useReactiveVar } from "@apollo/client";
+import { useFieldArray } from "react-hook-form";
 
 import { PizzaSizes } from "@/types/globalTypes";
-
-import { itemVar, useItemActions } from "@/state/item";
+import { ConfiguratorState } from "@/types/configurator";
 
 import { usePizzaToppings } from "@/queries/usePizzaToppings";
 
@@ -11,24 +10,44 @@ import { Topping } from "./Topping";
 
 import styles from "./Toppings.module.scss";
 
-export function Toppings() {
-  const { size, toppings } = useReactiveVar(itemVar);
+interface ToppingsProps {
+  size: string;
+}
+
+export function Toppings({ size }: ToppingsProps) {
+  const {
+    fields: toppings,
+    append,
+    remove,
+    replace,
+  } = useFieldArray<ConfiguratorState>({
+    name: "toppings",
+  });
 
   const { pizzaToppings, loading } = usePizzaToppings(
-    size?.name.toUpperCase() as PizzaSizes
+    size.toUpperCase() as PizzaSizes
   );
 
-  const { initialiseToppings } = useItemActions();
+  const getSelectedIndex = (name: string) => {
+    return toppings.findIndex((field) => field.name === name);
+  };
 
-  function isToppingSelected(name: string) {
-    return !!toppings.find((t) => t.name === name);
-  }
+  const isSelected = (name: string) => {
+    return getSelectedIndex(name) !== -1;
+  };
 
   useEffect(() => {
     if (!pizzaToppings || !pizzaToppings.toppings) return;
 
     // Initialise default selected toppings based on the selected pizza size
-    initialiseToppings(pizzaToppings.toppings);
+    replace(
+      pizzaToppings.toppings
+        .filter(({ defaultSelected }) => defaultSelected)
+        .map(({ topping }) => ({
+          name: topping.name,
+          price: topping.price,
+        }))
+    );
   }, [pizzaToppings]);
 
   if (loading) return <div>Loading toppings...</div>;
@@ -47,7 +66,11 @@ export function Toppings() {
             key={topping.name}
             topping={topping}
             reachedMaximum={pizzaToppings.maxToppings === toppings.length}
-            isSelected={isToppingSelected(topping.name)}
+            isSelected={isSelected(topping.name)}
+            onRemove={() => remove(getSelectedIndex(topping.name))}
+            onSelect={() =>
+              append({ name: topping.name, price: topping.price })
+            }
           />
         ))}
       </div>

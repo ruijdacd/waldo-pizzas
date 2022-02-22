@@ -1,32 +1,25 @@
-import { useReactiveVar } from "@apollo/client";
-
-import { itemVar } from "@/state/item";
+import { useFormContext } from "react-hook-form";
 
 import { usePizzaSizes } from "@/queries/usePizzaSizes";
+import { ConfiguratorState } from "@/types/configurator";
 
 import { Size } from "./Size";
 
 import styles from "./Sizes.module.scss";
 
 export function Sizes() {
-  const { size } = useReactiveVar(itemVar);
+  const { watch } = useFormContext<ConfiguratorState>();
+
+  const size = watch("size");
 
   const { pizzaSizes, loading } = usePizzaSizes();
-
-  function isSizeSelected(name: string) {
-    return size?.name === name;
-  }
 
   if (loading) return <div>Loading sizes...</div>;
 
   return (
     <div className={styles.root}>
-      {pizzaSizes.map((size) => (
-        <Size
-          key={size.name}
-          isSelected={isSizeSelected(size.name)}
-          size={size}
-        />
+      {pizzaSizes.map((s) => (
+        <Size key={s.name} isSelected={s.name === size?.name} size={s} />
       ))}
     </div>
   );
